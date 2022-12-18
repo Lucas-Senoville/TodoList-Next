@@ -1,4 +1,5 @@
 import { useState, createContext } from "react"
+import TodoContent from "../components/TodoContent.jsx"
 import TodoHeaders from "../components/TodoHeaders.jsx"
 
 const context = createContext()
@@ -40,6 +41,7 @@ const TodoPage = () => {
   return (
     <context.Provider value={{ state, setState }}>
       <TodoHeaders />
+      <TodoContent />
     </context.Provider>
   )
 }
