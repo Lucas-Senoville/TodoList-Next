@@ -12,20 +12,8 @@ const TodoContent = (props) => {
   const [showModal, setShowModal] = useState(false)
 
   const handleDelete = (key) => {
-    let currentState = { ...state }
-    // delete currentState.todoLists[state.selectedTodoId].todos[key]
-    // setState((previousState) => ({
-    //   ...previousState,
-    //   todoLists: {
-    //     ...previousState.todoLists,
-    //     [state.selectedTodoId]: {
-    //       ...previousState.todoLists[state.selectedTodoId],
-    //       todos: {
-
-    //       },
-    //     },
-    //   },
-    // }))
+    let currentState = Object.assign({}, state)
+    delete currentState.todoLists[state.selectedTodoId].todos[key]
     setState(currentState)
   }
 
@@ -57,7 +45,7 @@ const TodoContent = (props) => {
             </div>
             <button
               className="invisible py-2 mr-2 group-hover:visible"
-              onClick={handleDelete(key)}
+              onClick={() => handleDelete(key)}
             >
               <HiTrash className="h-6 w-6" />
             </button>
