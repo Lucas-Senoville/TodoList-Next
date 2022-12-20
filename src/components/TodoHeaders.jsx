@@ -1,5 +1,15 @@
 import { context } from "../pages/TodoPage.js"
 import { useCallback, useContext, useState } from "react"
+import { Form, Formik } from "formik"
+import FormField from "../components/FormField"
+import * as yup from "yup"
+
+const initialValues = {
+  title: "",
+}
+const validationSchema = yup.object().shape({
+  title: yup.string().min(2).max(40).required().label("Title"),
+})
 
 const TodoHeaders = () => {
   const { state, setState } = useContext(context)
@@ -7,7 +17,21 @@ const TodoHeaders = () => {
 
   const handleAdd = () => {
     setShowModal(true)
+  }
+  const handleSelection = useCallback(
+    (id) => {
+      const selectedId = id
+      setState((previousState) => ({
+        ...previousState,
+        selectedTodoId: selectedId,
+      }))
+    },
+    [state, setState]
+  )
+
+  const handleSubmit = (values) => {
     const lastId = state.lastTodoListId + 1
+    const todoName = values.title
     setState((previousState) => ({
       ...previousState,
       lastTodoListId: lastId,
@@ -15,25 +39,13 @@ const TodoHeaders = () => {
         ...previousState.todoLists,
         [lastId]: {
           id: state.lastTodoListId + 1,
-          name: "Hello",
+          name: todoName,
           todos: {},
         },
       },
     }))
+    setShowModal(false)
   }
-
-  const handleSelection = useCallback(
-    (id) => {
-      console.log(id)
-      const selectedId = id
-      setState((previousState) => ({
-        ...previousState,
-        selectedTodoId: selectedId,
-      }))
-      console.log(state)
-    },
-    [state, setState]
-  )
 
   return (
     <div className="overflow-x-auto flex border-b pt-2">
@@ -55,13 +67,44 @@ const TodoHeaders = () => {
       >
         +
       </button>
-      <div className="bg-white w-6/12	h-96 top-2/4 p-0 absolute z-10 border">
-        <header className="border-b flex justify-between p-2">
-          <h1 className="font-bold text-lg">Create todo list</h1>
-        </header>
-      </div>
+      {showModal ? (
+        <div className="bg-white w-6/12    h-96 top-2/4 p-0 absolute z-10 border">
+          <header className="border-b flex justify-between p-2">
+            <h1 className="font-bold text-lg">Create todo list</h1>
+            <button onClick={() => setShowModal(false)}>Close</button>
+          </header>
+          <div className="content">
+            <h3>Enter a title</h3>
+          </div>
+          <footer>
+            <div>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                <Form className="flex flex-col gap-4">
+                  <FormField
+                    label="Title"
+                    name="title"
+                    placeholder="Enter your todo title"
+                  />
+                  <button
+                    className="mt-4 bg-slate-600 text-white"
+                    onClick={() => setShowModal(false)}
+                  >
+                    CANCEL
+                  </button>
+                  <button className="mt-4 bg-blue-600 text-white" type="submit">
+                    SUBMIT
+                  </button>
+                </Form>
+              </Formik>
+            </div>
+          </footer>
+        </div>
+      ) : null}
     </div>
   )
 }
-
 export default TodoHeaders

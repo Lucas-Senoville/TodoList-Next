@@ -5,13 +5,29 @@ import {
   HiCheckCircle,
 } from "react-icons/hi2"
 import { context } from "../pages/TodoPage.js"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 
 const TodoContent = (props) => {
   const { state, setState } = useContext(context)
   const [showModal, setShowModal] = useState(false)
 
-  const handleDelete = (key) => {}
+  const handleDelete = (key) => {
+    let currentState = { ...state }
+    // delete currentState.todoLists[state.selectedTodoId].todos[key]
+    // setState((previousState) => ({
+    //   ...previousState,
+    //   todoLists: {
+    //     ...previousState.todoLists,
+    //     [state.selectedTodoId]: {
+    //       ...previousState.todoLists[state.selectedTodoId],
+    //       todos: {
+
+    //       },
+    //     },
+    //   },
+    // }))
+    setState(currentState)
+  }
 
   return (
     <div className="flex-1">
@@ -41,27 +57,13 @@ const TodoContent = (props) => {
             </div>
             <button
               className="invisible py-2 mr-2 group-hover:visible"
-              onClick={() => console.log(value)}
+              onClick={handleDelete(key)}
             >
               <HiTrash className="h-6 w-6" />
             </button>
           </div>
         )
       )}
-      {/* {Object.entries(state.selectedTodo.todos).map(([key, value]) => (
-        <div key={key} className="group flex justify-between border-b">
-          <div className="flex gap-2 content-center ml-4">
-            <input type="checkbox" id={value.description} name="horns" />
-            <p className="py-2">{value.description}</p>
-          </div>
-          <button
-            className="invisible py-2 mr-2 group-hover:visible"
-            onClick={handleDelete(key)}
-          >
-            <HiTrash className="h-6 w-6" />
-          </button>
-        </div>
-      ))} */}
     </div>
   )
 }
